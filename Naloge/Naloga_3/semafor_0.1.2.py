@@ -10,7 +10,7 @@ method = "BFGS"
 
 
 def F(w, args):
-    w0, gamma = args
+    λ, w0, wmax, beta = args
     global N
 
     temp = np.zeros(len(w) + 1); temp[0] = w0; temp[1:] = w; w = temp
@@ -19,10 +19,24 @@ def F(w, args):
     for i in range(1,N+1):
         F1 += ((w[i]-w[i-1])*N)**2
 
-
-    F2 = F1 + 1 + np.exp(gamma*(np.sum(w)-(w[0]+w[-1])/2 - N)) + np.exp(-gamma*(np.sum(w)-(w[0]+w[-1])/2 - N))
+    F0 = 0
+    for i in range(0,N):
+        F0 -= λ * w[i]
     
-    return F2
+    if wmax is not None:
+        F2 = 0
+        for i in range(1,N-1):
+            F2 += np.exp(beta * (w[i] - wmax))
+    
+    return (F1 + F2) + F0
+
+def getMinimizedSolution(λ, w0, wmax, beta):
+    stime = time.time()
+    result = minimize(F, [wmax for x in range(N)], method = method, args=[λ, w0, wmax, beta])
+    etime = time.time()
+    runtime = etime - stime
+    print(runtime)
+    return result.x
 
 
 def bisection(f, xtol):
@@ -59,51 +73,33 @@ def findCorrectSolution(w0, wmax, beta):
 
     return getMinimizedSolution(λ, w0, wmax, beta)
 
-def getMinimizedSolution(w0, gamma):
-    stime = time.time()
-    result = minimize(F, [1 for x in range(N)], method = method, args=[w0, gamma])
-    etime = time.time()
-    runtime = etime - stime
-    return result.x
 
+N = 100
 
-w0 = 0.2
+betas = np.arange(0,11,2)[::-1]
 
+#betas = [10]
 def anal_sol(T, w0):
     return w0 + 3*(1-w0)*(T-T**2/2)
 
-N = 200
+w0 = 1.2
+wmax = 1
 
-w0 = 0.2
-min = 0
-max = 20
-gammas = np.linspace(0,50,5)
+fig, ax = plt.subplots(1,1)
 
-fig, axs = plt.subplots(2,1)
-
-for i, gamma in enumerate(gammas):
-    print(f"i:{i}    gamma:{gamma}")
-    ws = getMinimizedSolution(w0,gamma)
+for i, beta in enumerate(betas):
+    print(f"i:{i}    $\\beta$:{beta}")
+    ws = findCorrectSolution(w0,wmax,beta)
     temp = np.zeros(len(ws) + 1); temp[0] = w0; temp[1:] = ws; ws = temp
-    axs[0].plot(np.linspace(0,1,N+1), ws, label = f"$\\gamma$ = {gammas[i]:0.2f}", linestyle = "dashed")
-
-    Ts = np.linspace(0,1,N+1)
-    axs[1].plot(Ts, np.abs(ws-np.array([anal_sol(T, w0) for T in Ts])), label = f"$\\gamma$ = {gammas[i]:0.2f}")
-
-Ts = np.linspace(0,1,300)
-axs[0].plot(Ts, [anal_sol(T, w0) for T in Ts], label = "analitična rešitev")
+    ax.plot(np.linspace(0,1,N+1), ws, label = f"$\\beta$ = {betas[i]:0.2f}")
 
 
 
 
-axs[0].legend()
-axs[0].set_xlabel("$\\tau$")
-axs[0].set_ylabel("$\\omega$")
 
-axs[1].legend()
-axs[1].set_xlabel("$\\tau$")
-axs[1].set_ylabel("Absolutna napaka")
-axs[1].set_yscale("log")
+ax.legend()
+ax.set_xlabel("$\\tau$")
+ax.set_ylabel("$\\omega$")
 
 plt.show()
 
