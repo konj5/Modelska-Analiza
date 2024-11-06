@@ -18,10 +18,12 @@ def solve(v0,f,args,t0, tk):
     return sol.t, sol.y
 
 N = 100
+R = 1
+
 startstates = np.zeros([N,3])
-ratios = np.linspace(0.5,1,N)[::-1]
-startstates[:,0] = ratios
-startstates[:,1] = (1-ratios)
+ratios = np.linspace(0,1,N)[::-1]
+startstates[:,0] = R*ratios
+startstates[:,1] = R*(1-ratios)
 
 alpha = 1
 beta = 0.1
@@ -37,7 +39,8 @@ startstates = startstates[::-1]
 
 for i in range(len(startstates[:,0])):
     v0 = startstates[i,:]
-    ts, vs = solve(v0, f, args, 0, 2)
+    ts, vs = solve(v0, f, args, 0, 10)
+    vs = vs / R
 
     axs[0].plot(ts, vs[0,:], color=cmap(norm(ratios[i])))
     axs[1].plot(ts, vs[1,:], color=cmap(norm(ratios[i])))

@@ -15,13 +15,9 @@ def solve(v0,f,args,t0, tk):
     sol = solve_ivp(lambda t, v: f(t, v, args), [t0,tk], v0, max_step = (tk-t0)/1000)
     return sol.t, sol.y
 
-import phaseportrait
-
-
-def dz(z, l):
-    return z * (1-l), l * (z-1)
-
-SimplePendulum = phaseportrait.PhasePortrait2D(dz, [0, 5], MeshDim=40, Title='Simple pendulum', xlabel=r"$\Theta$", ylabel=r"$\dot{\Theta}$")
-SimplePendulum.plot()
-
+t,y = solve([100,1], f,[1],0,100)
+n = ["Zajci", "Lisice"]
+for i in range(len(y[:,0])):
+    plt.plot(t,y[i,:], label = f"{n[i]}")
+plt.legend()
 plt.show()

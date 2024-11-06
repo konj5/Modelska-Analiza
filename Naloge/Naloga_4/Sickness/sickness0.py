@@ -16,7 +16,7 @@ def solve(v0,f,args,t0, tk):
     sol = solve_ivp(lambda t, v: f(t, v, args), [t0,tk], v0, max_step = (tk-t0)/1000)
     return sol.t, sol.y
 
-t,y = solve([5,1,0], f,[1,1, 10],0,1)
+t,y = solve([10,1,0], f,[1,1, 1],0,1)
 for i in range(len(y[:,0])):
     plt.plot(t,y[i,:], label = f"{i}")
 plt.legend()
