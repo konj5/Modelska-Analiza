@@ -17,7 +17,7 @@ def fun0(t,v, args):
 
 
 def solve0(v0,f,args,t0, tk):
-    sol = solve_ivp(lambda t, v: f(t, v, args), [t0,tk], v0, max_step = (tk-t0)/100000)
+    sol = solve_ivp(lambda t, v: f(t, v, args), [t0,tk], v0, max_step = (tk-t0)/1000000)
     return sol.t, sol.y
 
 
@@ -47,12 +47,12 @@ def fun(t,v, args):
 
 
 def solve(v0,f,args,t0, tk):
-    sol = solve_ivp(lambda t, v: f(t, v, args), [t0,tk], v0, max_step = (tk-t0)/100000)
+    sol = solve_ivp(lambda t, v: f(t, v, args), [t0,tk], v0, max_step = (tk-t0)/1000000)
     return sol.t, sol.y
 
 
 
-alpha = 1000
+alpha = 1
 
 beta = 1
 
