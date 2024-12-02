@@ -80,24 +80,27 @@ cmap = cm.get_cmap("gist_gray")
 norm = colors.Normalize(0, 1)
 
 #naloga = 3
-for naloga in range(len(naloge)-1):
+for naloga in range(len(naloge)):
+
+    naloga = 12
+
     data = p_table[:,naloga,:,naloga]
 
-    print(data)
-
-    p = len(letniki)
+    p = len(letniki)-1
 
     fig, ax = plt.subplots(1,1)
     fig.set_size_inches(2.7,2)
 
-    import matplotlib
-    ax.imshow(data, cmap=cmap, norm=norm, extent=[0,p,0,p])
+
+    ax.imshow(np.delete(np.delete(data,1,axis=1),1,axis=0), cmap=cmap, norm=norm, extent=[0,p,0,p])
 
     # draw gridlines
     ax.grid(which='minor', axis='both', linestyle='-', color='k', linewidth=2)
 
     ax.set_xticks([i for i in range(0,p,1)], [f"20{letniki[i]}" for i in range(0,p,1)])
     #plt.yticks([i for i in range(0,p,1)],  [f"20{letniki[i]}" for i in range(0,p,1)])
+
+    letniki = [10,13,14,100]
 
     ax.yaxis.set(ticks=np.arange(0.5, len([f"20{letniki[i]}" for i in range(0,p,1)])), ticklabels=[f"20{letniki[i]}" for i in range(0,p,1)][::-1])
     ax.set_yticks(ticks=np.arange(0, len([f"20{letniki[i]}" for i in range(0,p,1)])), minor=True)
@@ -112,15 +115,15 @@ for naloga in range(len(naloge)-1):
 
     plt.savefig(f"kolgo nal{naloga+1:02d}.png")
 
-    plt.show()
+    #plt.show()
 
 
 
 
 
 
-                
             
-                
+        
+            
 
 

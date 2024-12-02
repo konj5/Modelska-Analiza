@@ -80,15 +80,16 @@ cmap = cm.get_cmap("gist_gray")
 norm = colors.Normalize(0, 1)
 
 #naloga = 3
-for naloga in range(len(naloge)-1):
-    data = p_table[:,naloga,:,naloga]
+for leto in range(len(letniki)):
+    letnik = letniki[leto]
+    data = p_table[leto,:,leto,:]
 
     print(data)
 
-    p = len(letniki)
+    p = len(naloge)
 
     fig, ax = plt.subplots(1,1)
-    fig.set_size_inches(2.7,2)
+    fig.set_size_inches(5,4.5)
 
     import matplotlib
     ax.imshow(data, cmap=cmap, norm=norm, extent=[0,p,0,p])
@@ -96,21 +97,19 @@ for naloga in range(len(naloge)-1):
     # draw gridlines
     ax.grid(which='minor', axis='both', linestyle='-', color='k', linewidth=2)
 
-    ax.set_xticks([i for i in range(0,p,1)], [f"20{letniki[i]}" for i in range(0,p,1)])
-    #plt.yticks([i for i in range(0,p,1)],  [f"20{letniki[i]}" for i in range(0,p,1)])
 
-    ax.yaxis.set(ticks=np.arange(0.5, len([f"20{letniki[i]}" for i in range(0,p,1)])), ticklabels=[f"20{letniki[i]}" for i in range(0,p,1)][::-1])
-    ax.set_yticks(ticks=np.arange(0, len([f"20{letniki[i]}" for i in range(0,p,1)])), minor=True)
+    ax.yaxis.set(ticks=np.arange(0.5, len([f"{naloge[i]-100:02d}" for i in range(0,p,1)])), ticklabels=[f"{naloge[i]-100:02d}" for i in range(0,p,1)][::-1])
+    ax.set_yticks(ticks=np.arange(0, len([f"{naloge[i]-100:02d}" for i in range(0,p,1)])), minor=True)
     ax.tick_params(axis='y', which='minor', length=10)
     ax.tick_params(axis='y', which='major', length=0)
 
-    ax.xaxis.set(ticks=np.arange(0.5, len([f"20{letniki[i]}" for i in range(0,p,1)])), ticklabels=[f"20{letniki[i]}" for i in range(0,p,1)])
-    ax.set_xticks(ticks=np.arange(0, len([f"20{letniki[i]}" for i in range(0,p,1)])), minor=True)
+    ax.xaxis.set(ticks=np.arange(0.5, len([f"{naloge[i]-100:02d}" for i in range(0,p,1)])), ticklabels=[f"{naloge[i]-100:02d}" for i in range(0,p,1)])
+    ax.set_xticks(ticks=np.arange(0, len([f"{naloge[i]-100:02d}" for i in range(0,p,1)])), minor=True)
 
     fig.colorbar(cm.ScalarMappable(norm,cmap), ax = ax, label = "$p$")
-    ax.set_title(f"Naloga 1{naloga+1:02d}")
+    ax.set_title(f"Letnik 20{letnik:02d}")
 
-    plt.savefig(f"kolgo nal{naloga+1:02d}.png")
+    plt.savefig(f"kolgo letnik 20{letnik:02d}.png")
 
     plt.show()
 
