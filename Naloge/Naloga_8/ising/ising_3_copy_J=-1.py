@@ -15,7 +15,7 @@ def energija(mreza,zunanje):
     vsota=0
     for i in range(len(mreza)):
         for j in range(len(mreza)):
-            vsota+=(-(mreza[i][pbc(j+1,N)]+mreza[i][pbc(j-1,N)]+mreza[pbc(i+1,N)][j]+mreza[pbc(i-1,N)][j])-zunanje)*mreza[i][j]
+            vsota+=((mreza[i][pbc(j+1,N)]+mreza[i][pbc(j-1,N)]+mreza[pbc(i+1,N)][j]+mreza[pbc(i-1,N)][j])-zunanje)*mreza[i][j]
     return vsota/(len(mreza))**2
 
 
@@ -24,7 +24,7 @@ def energija_kvadrat(mreza,zunanje):
     N=len(mreza)
     for i in range(N):
         for j in range(len(mreza)):
-            vsota+=((-(mreza[i][pbc(j+1,N)]+mreza[i][pbc(j-1,N)]+mreza[pbc(i+1,N)][j]+mreza[pbc(i-1,N)][j])-zunanje)*mreza[i][j])**2
+            vsota+=(((mreza[i][pbc(j+1,N)]+mreza[i][pbc(j-1,N)]+mreza[pbc(i+1,N)][j]+mreza[pbc(i-1,N)][j])-zunanje)*mreza[i][j])**2
     return vsota/(len(mreza))**2
 
 

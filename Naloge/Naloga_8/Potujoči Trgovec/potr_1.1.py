@@ -29,19 +29,23 @@ def procedure(r0, Nmin):
                     plt.arrow(rmin[0,i], rmin[1,i], rmin[0,i+1]-rmin[0,i], rmin[1,i+1]-rmin[1,i], head_width = 0.03, head_length=0.02, length_includes_head = True)
                 plt.scatter(rmin[0,:],rmin[1,:])
                 plt.title(f"korak {_}, dolžina = {Lmin:0.2f}")
-
-                plt.savefig(f"1 step={_}.png")
                 
 
                 print("\n")
                 print(rmin[:,:])
                 print("\n")
+
+                plt.savefig(f"1.1 step={_}.png")
                 
                 plt.show()
 
         while(True):
-            i = np.random.randint(0,len(r0[0,:])-1)
-            r = np.copy(r0); r[:,i], r[:,i+1] = r0[:,i+1], r0[:,i]
+            i = np.random.randint(0,len(r0[0,:]))
+            j = np.random.randint(0,len(r0[0,:]))
+            while i == j:
+                j = np.random.randint(0,len(r0[0,:]))
+
+            r = np.copy(r0); r[:,i], r[:,j] = r0[:,j], r0[:,i]
             L = length(r)
 
 
@@ -74,6 +78,6 @@ for i in range(len(r[0,:])-1):
 plt.scatter(r0.T[0,:],r0.T[1,:])
 plt.title(f"korak {Nmin}, dolžina = {L:0.2f}")
 
-plt.savefig(f"1 step={Nmin}.png")
+plt.savefig(f"1.1 step={Nmin}.png")
 
 plt.show()

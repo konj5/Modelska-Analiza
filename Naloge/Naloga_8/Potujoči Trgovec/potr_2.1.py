@@ -91,10 +91,11 @@ plt.show()"""
 
 print(shortest_path(mat))"""
 
-T = 0.1
+T = 1
 
-points = [[0,0], [1,1], [2,0], [2,2], [0,2]]
-connections = {1:(2,5), 2:(1,5,3,4), 3:(2,4), 4:(2,3), 5:(1,2)}
+points = [[0,0], [0,1.5], [0,2], [0.5,1.5], [1,2], [3,0], [3,2],[3.5,1.5], [4,0], [4,2], [6,0], [6,1.5], [6,2], [6.5,1.5], [7,2]]
+connections = {1:(2,4), 2:(1,4,3), 3:(2,5), 4:(1,2,5), 5:(4,7), 6:(4,7,9), 7:(5,6,8), 8:(7,10), 9:(6,10), 10:(8,13,11), 11:(10,12), 12:(11,13,14), 13:(10,12,15), 14:(12,15), 15:(13,14)}
+thick = {1:[2], 2:[1,4,3], 3:[2,5], 4:[2], 5:[3], 6:[7], 7:[6,8], 8:[7,10], 9:[10], 10:[8,9], 11:[12], 12:[14,11,13], 13:[15,12], 14:[12], 15:[13]}
 arpoints = np.array(points)
 
 mat = np.zeros((len(points), len(points)))
@@ -108,29 +109,25 @@ print(mat)
 sij = shortest_path(mat)
 print(sij)
 
-Nmin = 10000
-r0 = np.array([i for i in range(len(points))])
+Nmin = 100000
+#r0 = np.array([i for i in range(len(points))])
+r0 = np.random.permutation(len(points))
 rmin, Lmin = procedure(r0, sij, Nmin)
 
 print(rmin+1)
 
 
-plt.scatter(arpoints[:,0], arpoints[:,1], c = "black", s = 200)
-
-for key in connections.keys():
-    plt.annotate(f"{key}",(points[key-1][0]-0.02, points[key-1][1]-0.02), color = "white")
-    for other in connections[key]:
-        plt.plot([points[key-1][0], points[other-1][0]], [points[key-1][1], points[other-1][1]], color = "black")
-
-plt.show()
-
 
 plt.scatter(arpoints[:,0], arpoints[:,1], c = "black", s = 200)
 
 for key in connections.keys():
-    plt.annotate(f"{key}",(points[key-1][0]-0.02, points[key-1][1]-0.02), color = "white")
+    plt.annotate(f"{key}",(points[key-1][0]-0.14, points[key-1][1]-0.02), color = "white")
     for other in connections[key]:
-        plt.plot([points[key-1][0], points[other-1][0]], [points[key-1][1], points[other-1][1]], color = "black")
+        width = 1
+        if other in thick[key]:
+            width = 3
+
+        plt.plot([points[key-1][0], points[other-1][0]], [points[key-1][1], points[other-1][1]], color = "black", linewidth=width)
 
 plt.title(f"L = {Lmin:0.2f}")
 plt.show()
