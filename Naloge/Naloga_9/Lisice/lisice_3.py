@@ -28,9 +28,9 @@ def dN(factor, N, dt):
 
 
 dt = 0.001
-tmax = 20
+tmax = 80
 
-Zstart = 250
+Zstart = 200
 Lstart = 50
 
 """z_death = 4
@@ -103,7 +103,7 @@ for _ in tqdm(range(1000)):
 
 fig, axs = plt.subplots(2,1); ax1, ax2 = axs   
 ax1.hist(death_z, np.linspace(0,tmax,40), label = "Zajci", alpha = 0.8, density = True)
-ax2.hist(death_z, np.linspace(0,tmax,40), label = "Lisice", alpha = 0.8, density = True)
+ax2.hist(death_l, np.linspace(0,tmax,40), label = "Lisice", alpha = 0.8, density = True)
 
 ax1.set_xlabel("Čas izumrtja")
 ax1.set_ylabel("Verjetnostna porazdelitev")
@@ -113,7 +113,7 @@ ax2.set_xlabel("Čas izumrtja")
 ax2.set_ylabel("Verjetnostna porazdelitev")
 ax2.set_title("Lisice")
 
-plt.legend()
+#plt.legend()
 plt.show()
 
 

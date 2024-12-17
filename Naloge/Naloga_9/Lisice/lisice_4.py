@@ -57,6 +57,7 @@ alphas = np.linspace(0.1,2,10)
 betas = np.linspace(0.1,2,10)
 death_z = np.zeros((len(alphas), len(betas)))
 death_l = np.zeros((len(alphas), len(betas)))
+survrate_z = np.zeros((len(alphas), len(betas)))
 
 for u in tqdm(range(len(alphas))):
     alpha = alphas[u]
@@ -64,6 +65,9 @@ for u in tqdm(range(len(alphas))):
         beta = betas[v]
         death_z_temp = []
         death_l_temp = []
+
+        count = 0
+        happy_wabbits = 0
 
         for _ in tqdm(range(40), leave=False):
             zs = np.zeros_like(ts, dtype=np.int32); zs[0] = Zstart
@@ -100,33 +104,51 @@ for u in tqdm(range(len(alphas))):
                     c2 = True
                 elif c1 and c2:
                     break
+
+            count += 1
+            if not (c1 and c2):
+                happy_wabbits += 1
+        
+        survrate_z[u,v] = happy_wabbits/count
         
         death_z[u,v] = np.average(death_z_temp)
         death_l[u,v] = np.average(death_l_temp)
 
-fig, axs = plt.subplots(1,2); ax1,ax2=axs
+fig, axs = plt.subplots(1,3); ax1,ax2,ax3=axs
 
 cmap = cm.get_cmap("viridis")
 norm = colors.Normalize(0, tmax)
 
 ax1.imshow(death_z, cmap=cmap, norm=norm, origin="lower", extent=[alphas[0], alphas[-1], betas[0], betas[-1]])
-#fig.colorbar(cm.ScalarMappable(norm,cmap), label="Čas izumrtja", ax=ax1)
+
+im_ratio = death_z.shape[0]/death_z.shape[1]
+
+fig.colorbar(cm.ScalarMappable(norm,cmap), label="Čas izumrtja", ax=ax1,fraction=0.047*im_ratio)
 ax1.set_xlabel("$\\alpha$")
 ax1.set_ylabel("$\\beta$")
 ax1.set_title("Zajci")
 
-#cmap = cm.get_cmap("viridis")
-#norm = colors.Normalize(0, tmax)
+cmap = cm.get_cmap("viridis")
+norm = colors.Normalize(0, tmax)
 
-print(death_z)
 
-ax2.imshow(death_z, cmap=cmap, norm=norm, origin="lower", extent=[alphas[0], alphas[-1], betas[0], betas[-1]])
-fig.colorbar(cm.ScalarMappable(norm,cmap), label="Čas izumrtja", ax=ax2)
+ax2.imshow(death_l, cmap=cmap, norm=norm, origin="lower", extent=[alphas[0], alphas[-1], betas[0], betas[-1]])
+fig.colorbar(cm.ScalarMappable(norm,cmap), label="Čas izumrtja", ax=ax2,fraction=0.047*im_ratio)
 ax2.set_xlabel("$\\alpha$")
 ax2.set_ylabel("$\\beta$")
 ax2.set_title("Lisice")
 
-print(death_l)
+
+cmap = cm.get_cmap("binary")
+norm = colors.Normalize(0, 1)
+
+
+ax3.imshow(survrate_z, cmap=cmap, norm=norm, origin="lower", extent=[alphas[0], alphas[-1], betas[0], betas[-1]])
+fig.colorbar(cm.ScalarMappable(norm,cmap), label="Delež preživelih populacij zajcev", ax=ax3,fraction=0.047*im_ratio)
+ax3.set_xlabel("$\\alpha$")
+ax3.set_ylabel("$\\beta$")
+ax3.set_title("Delež preživelih populacij zajcev")
+
 
 plt.show()
 
