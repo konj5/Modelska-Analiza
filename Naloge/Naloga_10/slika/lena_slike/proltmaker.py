@@ -26,7 +26,7 @@ for k in [2]:
         ax1.axis('off')
 
 
-        nimage = deconvolve_pure(extend(image), kernel)
+        nimage = deconvolve_pure(image, kernel)
         ax2.imshow(nimage, cmap="binary_r")
         ax2.set_title("Dekonvolucija")
         ax2.axis('off')
