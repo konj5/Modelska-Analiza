@@ -36,6 +36,18 @@ def kalman_iter(x0, P0, z):
 
     return xnew, Pnew
 
+def kalman_iter_nox(x0, P0, z):
+    xbar = F.dot(x0) + c
+    Pbar = F.dot(P0.dot(F.T)) + Q
+
+    H[2,2] = 0; H[3,3] = 0
+
+    K = Pbar.dot(H.T).dot(np.linalg.inv(H.dot(Pbar).dot(H.T) + R))
+    xnew = xbar + K.dot(z-H.dot(xbar))
+    Pnew = Pbar - K.dot(H).dot(Pbar)
+
+    return xnew, Pnew
+
 def kalman_iter_no_measure(x0, P0, z):
     xbar = F.dot(x0) + c
     Pbar = F.dot(P0.dot(F.T)) + Q
@@ -52,7 +64,7 @@ def verr(vx,vy):
 fig, axs = plt.subplots(1,2)
 ax1,ax2 = axs
 
-for skipn in [1,5,10,50,100]:
+for skipn in [1]:
     t,x,y,vx,vy,ax,ay = data[0,:]
     xs, Ps = np.array([x,y,vx,vy]), np.diag([25**2, 25**2, verr(vx,vy)**2, verr(vx,vy)**2])
 
@@ -75,9 +87,12 @@ for skipn in [1,5,10,50,100]:
 
         H = np.eye(4)
 
-        if i % skipn == 0:
+        if i % 10 == 0:
             xs, Ps = kalman_iter(xss[i-1,:], Pss[i-1,:,:], np.array([x,y,vx,vy]))
             print(1)
+        elif i % 5 == 0:
+            xs, Ps = kalman_iter_nox(xss[i-1,:], Pss[i-1,:,:], np.array([x,y,vx,vy]))
+            print(2)
         else:
             xs, Ps = kalman_iter_no_measure(xss[i-1,:], Pss[i-1,:,:], np.array([x,y,vx,vy]))
             print(0)
@@ -90,11 +105,11 @@ for skipn in [1,5,10,50,100]:
     #print(kontrola[0,:])
 
 
-    ax1.plot(xss[:,0], xss[:,1], label = f"{skipn}")
-    ax2.plot(kontrola[:,0], np.sqrt(Pss[:,0,0] + Pss[:,1,1]), label = f"{skipn}")
+    ax1.plot(xss[:,0], xss[:,1])
+    ax2.plot(kontrola[:,0], np.sqrt(Pss[:,0,0] + Pss[:,1,1]))
     
 
-ax1.plot(kontrola[:,1], kontrola[:,2], color = "black", linestyle = "dashed", label = "Točno")
+ax1.plot(kontrola[:,1], kontrola[:,2], color = "black", linestyle = "dashed", label = "Kontrola")
 
 ax1.set_xlabel("x")
 ax1.set_ylabel("y")

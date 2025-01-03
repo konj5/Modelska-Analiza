@@ -43,7 +43,7 @@ def kalman_iter_no_measure(x0, P0, z):
     xbar = F.dot(x0) + c
     Pbar = F.dot(P0.dot(F.T)) + Q
 
-    inov = z-H.dot(xbar)
+    #inov = z-H.dot(xbar)
 
     xnew = xbar
     Pnew = Pbar

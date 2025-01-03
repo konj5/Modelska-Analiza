@@ -50,9 +50,12 @@ def verr(vx,vy):
 
 
 fig, axs = plt.subplots(1,2)
-ax1,ax2 = axs
+ax3,ax4 = axs
 
-for skipn in [1,5,10,50,100]:
+import seaborn as sns
+palette = sns.color_palette(n_colors=10)
+
+for j, skipn in enumerate([1,10,100]):
     t,x,y,vx,vy,ax,ay = data[0,:]
     xs, Ps = np.array([x,y,vx,vy]), np.diag([25**2, 25**2, verr(vx,vy)**2, verr(vx,vy)**2])
 
@@ -90,24 +93,30 @@ for skipn in [1,5,10,50,100]:
     #print(kontrola[0,:])
 
 
-    ax1.plot(xss[:,0], xss[:,1], label = f"{skipn}")
-    ax2.plot(kontrola[:,0], np.sqrt(Pss[:,0,0] + Pss[:,1,1]), label = f"{skipn}")
     
 
-ax1.plot(kontrola[:,1], kontrola[:,2], color = "black", linestyle = "dashed", label = "Točno")
+    ax3.plot(kontrola[:,0], xss[:,2], c = palette[j])
+    ax3.plot(kontrola[:,0], xss[:,3], c = palette[j])
+    ax4.plot(kontrola[:,0], np.sqrt(Pss[:,2,2] + Pss[:,3,3]), label = f"{skipn}", c = palette[j])
+    
 
-ax1.set_xlabel("x")
-ax1.set_ylabel("y")
+ax3.plot(kontrola[:,0], kontrola[:,3], color = "black", linestyle = "dashed", label = "kontrola $v_x$")
+ax3.plot(kontrola[:,0], kontrola[:,4], color = "black", linestyle = "dotted", label = "kontrola $v_y$")
 
-ax2.set_xlabel("čas")
-ax2.set_ylabel("$\\sqrt{\\sigma_x^2 + \\sigma_y^2}$")
-ax2.set_yscale("log")
+ax3.set_xlabel("čas")
+ax3.set_ylabel("hitrost")
+
+ax4.set_xlabel("čas")
+ax4.set_ylabel("$\\sqrt{\\sigma_{v_x}^2 + \\sigma_{v_y}^2}$")
+ax4.set_yscale("log")
+
 
     ######
 
     #plt.plot(kontrola[::skipn,0], np.sqrt((kontrola[::skipn,1]-xss[:len(xss)//skipn,0])**2 + (kontrola[::skipn,2]-xss[:len(xss)//skipn,1])**2), label = f"{skipn}")
 
-ax1.legend()
+ax3.legend()
+ax4.legend()
 plt.show()
 
 
