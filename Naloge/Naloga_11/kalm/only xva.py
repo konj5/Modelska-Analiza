@@ -113,9 +113,9 @@ Pss_v = np.copy(Pss)
 
 ########
 
-plt.plot(xss_xa[:,0], xss_xa[:,1], label = "Samo pozicija in pospešek")
+plt.plot(xss_xa[:,0], xss_xa[:,1], label = "Samo pozicija")
 plt.plot(xss_v[:,0], xss_v[:,1], label = "Samo hitrost")
-plt.plot(kontrola[:,1], kontrola[:,2], color = "black", label = "Kontrola")
+plt.plot(kontrola[:,1], kontrola[:,2], color = "black", label = "Kontrola", linestyle = "dashed")
 plt.xlabel("x")
 plt.ylabel("y")
 plt.legend()
@@ -125,11 +125,56 @@ plt.show()
 
 ########
 
-plt.plot(xss_xa[:,0], xss_xa[:,1], label = "Samo pozicija in pospešek")
-plt.plot(xss_v[:,0], xss_v[:,1], label = "Samo hitrost")
-plt.plot(kontrola[:,1], kontrola[:,2], color = "black", label = "Kontrola")
-plt.xlabel("x")
-plt.ylabel("y")
+plt.plot(xss_xa[:,2], xss_xa[:,3], label = "Samo pozicija")
+plt.plot(xss_v[:,2], xss_v[:,3], label = "Samo hitrost")
+plt.plot(kontrola[:,3], kontrola[:,4], color = "black", label = "Kontrola", linestyle = "dashed")
+plt.xlabel("$v_x$")
+plt.ylabel("$v_y$")
 plt.legend()
+
+plt.show()
+
+
+#######
+
+fig, axs = plt.subplots(1,2); ax1,ax2=axs
+
+ax1.scatter(kontrola[:,1]-xss_xa[:,0], kontrola[:,2]-xss_xa[:,1], label = "Samo pozicija", s = 2)
+ax1.scatter(kontrola[:,1]-xss_v[:,0], kontrola[:,2]-xss_v[:,1], label = "Samo hitrost", s = 2)
+
+ax2.scatter(kontrola[:,3]-xss_xa[:,2], kontrola[:,4]-xss_xa[:,3], label = "Samo pozicija", s = 2)
+ax2.scatter(kontrola[:,3]-xss_v[:,2], kontrola[:,4]-xss_v[:,3], label = "Samo hitrost", s = 2)
+
+ax1.set_xlabel("$x_{\\text{kontrola}} - x$")
+ax1.set_ylabel("$y_{\\text{kontrola}} - y$")
+
+ax2.set_xlabel("$v_{x,\\text{kontrola}} - v_x$")
+ax2.set_ylabel("$v_{y,\\text{kontrola}} - v_y$")
+
+ax2.legend()
+
+plt.show()
+
+
+#######
+
+
+fig, axs = plt.subplots(1,2); ax1,ax2=axs
+
+ax1.plot(kontrola[:,0], np.sqrt(Pss_xa[:,0,0]**2 + (Pss_xa[:,1,1]**2)), label = "Samo pozicija")
+ax1.plot(kontrola[:,0], np.sqrt(Pss_v[:,0,0]**2 + (Pss_v[:,1,1]**2)), label = "Samo hitrost")
+
+ax2.plot(kontrola[:,0], np.sqrt(Pss_xa[:,2,2]**2 + (Pss_xa[:,3,3]**2)), label = "Samo pozicija")
+ax2.plot(kontrola[:,0], np.sqrt(Pss_v[:,2,2]**2 + (Pss_v[:,3,3]**2)), label = "Samo hitrost")
+
+ax1.set_xlabel("čas")
+ax1.set_ylabel("$\\sqrt{\\sigma_x^2+\\sigma_y^2}$")
+ax1.set_yscale("log")
+
+ax2.set_xlabel("čas")
+ax2.set_ylabel("$\\sqrt{\\sigma_{v_x}^2+\\sigma_{v_y}^2}$")
+ax2.set_yscale("log")
+
+ax2.legend()
 
 plt.show()
